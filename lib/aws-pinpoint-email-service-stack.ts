@@ -1,16 +1,31 @@
-import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+import * as cdk from "aws-cdk-lib";
+import { Construct } from "constructs";
+import * as apigwv2 from "@aws-cdk/aws-apigatewayv2-alpha";
 
 export class AwsPinpointEmailServiceStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
+    const { service, stage } = props?.tags!;
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'AwsPinpointEmailServiceQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    // ===============================================================================
+    // CREATED HTTP API FOR SENDING EMAILS THROUGH PINPOINT
+    // ===============================================================================
+
+    const pinpointEmailApi = new apigwv2.HttpApi(
+      this,
+      `${service}-${stage}-api`,
+      {
+        apiName: `${service}-${stage}-api`,
+        description:
+          "This api is responsible for sending emails with pinpoint.",
+        corsPreflight: {
+          allowHeaders: ["Content-Type"],
+          allowMethods: [apigwv2.CorsHttpMethod.POST],
+          allowCredentials: false,
+          allowOrigins: ["*"],
+        },
+      }
+    );
   }
 }
