@@ -1,6 +1,7 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as apigwv2 from "@aws-cdk/aws-apigatewayv2-alpha";
+import * as apigwv2_integrations from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as pinpoint from "aws-cdk-lib/aws-pinpoint";
 import * as lambda from "aws-cdk-lib/aws-lambda";
@@ -108,5 +109,15 @@ export class AwsPinpointEmailServiceStack extends cdk.Stack {
         },
       }
     );
+
+    // ===============================================================================
+    // CREATED HTTP API INTEGRATIONS WITH API-GATEWAY
+    // ===============================================================================
+
+    const pinpointSendEmailLambdaIntegration =
+      new apigwv2_integrations.HttpLambdaIntegration(
+        `${service}-${stage}-send-email-lambda-integration`,
+        pinpointSendEmailLambda
+      );
   }
 }
