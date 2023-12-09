@@ -70,5 +70,22 @@ export class AwsPinpointEmailServiceStack extends cdk.Stack {
         name: `${service}-${stage}-project`,
       }
     );
+
+    // ===============================================================================
+    // CREATED A PINPOINT EMAIL CHANNEL
+    // ===============================================================================
+
+    new pinpoint.CfnEmailChannel(
+      this,
+      `${service}-${stage}-pinpoint-email-channel`,
+      {
+        applicationId: pinpointEmailApp.ref,
+        enabled: true,
+        fromAddress: "raofahad046@gmail.com",
+        identity:
+          "arn:aws:ses:us-east-1:961322954791:identity/raofahad046@gmail.com",
+        roleArn: pinpoint_role.roleArn,
+      }
+    );
   }
 }
