@@ -3,6 +3,7 @@ import { Construct } from "constructs";
 import * as apigwv2 from "@aws-cdk/aws-apigatewayv2-alpha";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as pinpoint from "aws-cdk-lib/aws-pinpoint";
+import * as lambda from "aws-cdk-lib/aws-lambda";
 
 export class AwsPinpointEmailServiceStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -85,6 +86,26 @@ export class AwsPinpointEmailServiceStack extends cdk.Stack {
         identity:
           "arn:aws:ses:us-east-1:961322954791:identity/raofahad046@gmail.com",
         roleArn: pinpoint_role.roleArn,
+      }
+    );
+
+    // ===============================================================================
+    // LAMBDA: CREATED LAMBDA FUNCTION FOR PINPOINT EMAIL SERVICE
+    // ===============================================================================
+
+    const pinpointSendEmailLambda = new lambda.Function(
+      this,
+      `${service}-${stage}-send-email-lambda`,
+      {
+        functionName: `${service}-${stage}-send-email-lambda`,
+        runtime: lambda.Runtime.NODEJS_18_X,
+        code: lambda.Code.fromAsset("lambda"),
+        handler: "SendEmail.handler",
+        role: pinpoint_role,
+        environment: {
+          FROM_EMAIL: "raofahad046@gmail.com",
+          APP_ID: pinpointEmailApp.ref,
+        },
       }
     );
   }
