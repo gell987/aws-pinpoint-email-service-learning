@@ -129,5 +129,13 @@ export class AwsPinpointEmailServiceStack extends cdk.Stack {
       methods: [apigwv2.HttpMethod.POST],
       integration: pinpointSendEmailLambdaIntegration,
     });
+
+    // ===============================================================================
+    // OUTPUT STATEMENTS FOR OUTPUT URLS AND ARNS
+    // ===============================================================================
+
+    new cdk.CfnOutput(this, `${service}-${stage}-feedback-api-endpoint`, {
+      value: pinpointEmailApi.url!,
+    });
   }
 }
