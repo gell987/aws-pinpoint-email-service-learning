@@ -2,6 +2,7 @@ import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as apigwv2 from "@aws-cdk/aws-apigatewayv2-alpha";
 import * as iam from "aws-cdk-lib/aws-iam";
+import * as pinpoint from "aws-cdk-lib/aws-pinpoint";
 
 export class AwsPinpointEmailServiceStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -56,6 +57,18 @@ export class AwsPinpointEmailServiceStack extends cdk.Stack {
         actions: ["mobiletargeting:SendMessages"],
         resources: ["*"],
       })
+    );
+
+    // ===============================================================================
+    // CREATED A PINPOINT APP FOR SENDING EMAILS
+    // ===============================================================================
+
+    const pinpointEmailApp = new pinpoint.CfnApp(
+      this,
+      `${service}-${stage}-project`,
+      {
+        name: `${service}-${stage}-project`,
+      }
     );
   }
 }
